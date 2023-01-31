@@ -1,10 +1,15 @@
-#For testing purpose only
-
 import time
-
+from re import search
+import seaborn as sns
 import numpy as np
+import plotly.graph_objects as go
 import pandas as pd
 import streamlit as st
+from matplotlib import pyplot as plt
+from wordcloud import WordCloud
+
+# Page Setting
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 st.set_page_config(
 page_title="Real-Time Audio Classification Dashboard",
@@ -12,37 +17,43 @@ page_icon="🎧",
 layout="wide",
 )
 
-dataset_url = "classification_log.csv"
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
+# Audio Data
+data = 'classification_log.csv'
 @st.experimental_memo
 def get_data() -> pd.DataFrame:
-    return pd.read_csv(dataset_url)
+    return pd.read_csv(data)
 
 df = get_data()
 
-st.title("Real-Time Audio Classification Dashboard")
+st.markdown("<h1 style='text-align: center; color: black;'>🎧 Real-Time Audio Classification Dashboard</h1>", unsafe_allow_html=True)
 
-#top-level filters
-classification_filter = st.selectbox("Select the Classification", pd.unique(df["Classification"]))
+#Word Cloud
+accuracies = df["Accuracy"]
 
-#creating a single-element container
-placeholder = st.empty()
+wordcloud = WordCloud(width = 800, height = 200,
+                background_color ='white',
+                min_font_size = 10).generate(' '.join(df['Classification']))
 
-#dataframe filter
-df = df[df["Classification"] == classification_filter]
+plt.figure(figsize = (8, 8), facecolor = None)
+plt.imshow(wordcloud)
+plt.axis("off")
+plt.tight_layout(pad = 0)
 
-for seconds in range(200):
-#creating KPIs
-    avg_accuracy = round(np.mean(df["Accuracy"]), 2)
-with placeholder.container():
-    kpi = st.columns(1)
+st.pyplot()
 
-    kpi[0].metric(
-        label="Accuracy",
-        value=avg_accuracy,
-        delta=round(avg_accuracy - 0.5, 2),
-    )
+# Create 2 columns for Heatmap and Pie Chart
 
-st.markdown("### Detailed Data View")
-st.dataframe(df)
-time.sleep(1)
+c1, c2 = st.columns((5,5))
+with c1:
+    st.markdown('### Heatmap')
+    fig = go.Figure(data=go.Heatmap(x=df["Timestamp"], y=df["Classification"], z=df["Accuracy"], colorscale='Viridis'))
+    st.plotly_chart(fig)
+
+with c2:
+    st.markdown('### Pie Chart')
+    classifications = df['Classification'].value_counts()
+    fig = go.Figure(data=[go.Pie(labels=classifications.index, values=classifications.values)])
+    st.plotly_chart(fig)
