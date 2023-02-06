@@ -15,6 +15,12 @@ import matplotlib.pyplot as plt
 from tkinter import *
 from PIL import Image, ImageTk
 from wordcloud import WordCloud
+import paho.mqtt.client as mqtt
+
+# MQTT connection parameters
+MQTT_BROKER = "localhost"
+MQTT_PORT = 1883
+MQTT_TOPIC = "prediction"
 
 root = Tk()
 root.geometry("600x660")
