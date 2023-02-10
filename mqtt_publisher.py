@@ -334,11 +334,11 @@ writer.writeheader()
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "python/mqtt"
-client_id = f'python-mqtt-{random.randint(0, 1000)}'
+topic = "audio_test"
+#client_id = 'audio_test'
+client_id = "python-mqtt-tcp-sub-{id}".format(id=random.randint(0, 1000))
 username = 'emqx'
 password = 'public'
-
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
@@ -355,9 +355,12 @@ def connect_mqtt():
     return client
 
 def publish_prediction(client, time_stamp, category_name, score):
-    # Publish the data to the MQTT broker
-    client.publish(topic, json.dumps(
-        {'Timestamp': time_stamp, 'Classification': category_name, 'Accuracy': score}))
+    msg = json.dumps({'Timestamp': time_stamp, 'Classification': category_name, 'Accuracy': score})
+    result = client.publish(topic, msg)
+    if result[0] == 0:
+        print("Successfully published message: {}".format(msg))
+    else:
+        print("Failed to publish message: {}".format(msg))
 
 # Initialize the MQTT client
 client = connect_mqtt()
