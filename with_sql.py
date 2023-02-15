@@ -6,6 +6,7 @@ import streamlit as st
 import paho.mqtt.client as mqtt
 import pandas as pd
 import json
+import sqlite3
 
 from matplotlib import pyplot as plt
 from wordcloud import WordCloud
@@ -25,6 +26,16 @@ topic = "audio_test"
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'emqx'
 password = 'public'
+
+conn = sqlite3.connect('data.db')
+cursor = conn.cursor()
+cursor.execute('''CREATE TABLE IF NOT EXISTS audio_classification (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               timestamp TEXT,
+               classification TEXT,
+               accuracy REAL
+            );''')
+conn.commit()
 
 def connect_mqtt() -> mqtt:
     def on_connect(client, userdata, flags, rc):
@@ -48,8 +59,15 @@ def on_message(client, userdata, msg):
     topic = msg.topic
     message = msg.payload.decode()
     data_json = json.loads(message)
+
+    conn = sqlite3.connect('data.db')
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO audio_classification (timestamp, classification, accuracy) VALUES (?, ?, ?)", (data_json["Timestamp"], data_json["Classification"], data_json["Accuracy"]))
+    conn.commit()
+    conn.close()
+
     global df
-    df = df.append(data_json, ignore_index=True)
+    df = pd.read_sql_query("SELECT * FROM audio_classification", conn)
     print("Data: ", df)
     print("Classification: ", data_json["Classification"])
 
@@ -105,6 +123,11 @@ def update_plot():
         pie_chart.plotly_chart(fig)
 
 def main():
+    conn = sqlite3.connect('data.db')
+    global df
+    df = pd.read_sql_query("SELECT * FROM audio_classification", conn)
+    conn.close()
+
     client = connect_mqtt()
     while True:
         update_plot()

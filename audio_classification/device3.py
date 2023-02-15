@@ -334,8 +334,8 @@ writer.writeheader()
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "audio_test"
-#client_id = 'audio_test'
+main_topic = "audio_test"
+sub_topic = "device3"
 client_id = "python-mqtt-tcp-sub-{id}".format(id=random.randint(0, 1000))
 username = 'emqx'
 password = 'public'
@@ -354,7 +354,7 @@ def connect_mqtt():
     client.loop_start()
     return client
 
-def publish_prediction(client, time_stamp, category_name, score):
+def publish_prediction(client, time_stamp, category_name, score, topic):
     msg = json.dumps({'Timestamp': time_stamp, 'Classification': category_name, 'Accuracy': score})
     result = client.publish(topic, msg)
     if result[0] == 0:
@@ -414,7 +414,8 @@ def run(model: str, max_results: int, score_threshold: float,
             time_stamp = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
             writer.writerow({'Timestamp': time_stamp, 'Classification': category.category_name, 'Accuracy': score})
             log_file.flush()
-            publish_prediction(client, time_stamp, category.category_name, score)
+            publish_prediction(client, time_stamp, category.category_name, score, main_topic)
+            publish_prediction(client, time_stamp, category.category_name, score, sub_topic)
         time_interval = slider.get()
         time.sleep(time_interval)
         ui_val(result)

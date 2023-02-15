@@ -16,12 +16,12 @@ st.set_page_config(
         page_icon="🎧",
         layout="wide",
     )
-st.markdown("<h1 style='text-align: center; color: black;'>🎧 Real-Time Audio Classification Dashboard</h1>",
+st.markdown("<h1 style='text-align: center; color: black;'>🎧 Raspberry Pi Device 2 Dashboard</h1>",
                 unsafe_allow_html=True)
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "audio_test"
+topic = "device2"
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'emqx'
 password = 'public'

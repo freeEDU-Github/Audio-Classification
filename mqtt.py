@@ -1,4 +1,6 @@
 import argparse
+import json
+import random
 import time
 
 from tflite_support.task import audio
@@ -21,6 +23,7 @@ root = Tk()
 root.geometry("600x660")
 
 min_prediction = 50
+
 
 def logs():
     root = tk.Tk()
@@ -116,20 +119,23 @@ def graphic_ui(result):
         label_list = [category.category_name for category in classification.categories]
         score_list = [category.score for category in classification.categories]
         percentage = "{:.0%}".format(score_list[0])
-        
-        if label_list[0] == 'Police car (siren)' or label_list[0] == 'Civil defense siren' or label_list[0] == 'Smoke alarm' or label_list[0] == 'Screaming' or label_list[0] == 'Shout' or label_list[0] == 'Siren':
+
+        if label_list[0] == 'Police car (siren)' or label_list[0] == 'Civil defense siren' or label_list[
+            0] == 'Smoke alarm' or label_list[0] == 'Screaming' or label_list[0] == 'Shout' or label_list[0] == 'Siren':
             rectangle.create_rectangle(0, 0, 600, 50, fill="red")
             rectangle.create_text(300, 25, text="Danger", font=("Castellar", 20), fill="white")
-        elif label_list[0] == 'Bus' or label_list[0] == 'Truck' or label_list[0] == 'Train' or label_list[0] == 'Inside, public space' or label_list[0] == 'Applause':
+        elif label_list[0] == 'Bus' or label_list[0] == 'Truck' or label_list[0] == 'Train' or label_list[
+            0] == 'Inside, public space' or label_list[0] == 'Applause':
             rectangle.create_rectangle(0, 0, 600, 50, fill="yellow")
             rectangle.create_text(300, 25, text="Risky", font=("Castellar", 20), fill="white")
-        elif label_list[0] == 'Silence' or label_list[0] == 'Typing' or label_list[0] == 'Printer' or label_list[0] == 'Computer keyboard' or label_list[0] == 'Snoring':
+        elif label_list[0] == 'Silence' or label_list[0] == 'Typing' or label_list[0] == 'Printer' or label_list[
+            0] == 'Computer keyboard' or label_list[0] == 'Snoring':
             rectangle.create_rectangle(0, 0, 600, 50, fill="green")
             rectangle.create_text(300, 25, text="Safe", font=("Castellar", 20), fill="white")
         else:
             rectangle.create_rectangle(0, 0, 600, 50, fill="white")
 
-        #Safe
+        # Safe
         if label_list[0] == 'Silence':
             image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/silence.jpg")
             img = image1.resize((295, 320))
@@ -165,7 +171,7 @@ def graphic_ui(result):
             label1.configure(image=test)
             label1.image = test
 
-        #Risky
+        # Risky
         elif label_list[0] == 'Bus':
             image1 = Image.open(
                 "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Bus.jpg")
@@ -202,9 +208,10 @@ def graphic_ui(result):
             label1.configure(image=test)
             label1.image = test
 
-        #Danger
+        # Danger
         elif label_list[0] == 'Police car (siren)':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Police car (siren).jpg")
+            image1 = Image.open(
+                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Police car (siren).jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
@@ -277,13 +284,15 @@ def graphic_ui(result):
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Conversation':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Conversation.jpg")
+            image1 = Image.open(
+                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Conversation.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Alarm clock':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Alarm clock.jpg")
+            image1 = Image.open(
+                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Alarm clock.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
@@ -295,12 +304,13 @@ def graphic_ui(result):
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Christmas music':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Christmas music.jpg")
+            image1 = Image.open(
+                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Christmas music.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
-        
+
         else:
             image1 = Image.open(
                 "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/none.jpg")
@@ -316,13 +326,43 @@ def graphic_ui(result):
     root.after(1000, update_ui)
     root.update()
 
-
 # Open the CSV file for writing
 log_file = open("classification_log.csv", "w", newline='')
 fieldnames = ['Timestamp', 'Classification', 'Accuracy']
 writer = csv.DictWriter(log_file, fieldnames=fieldnames)
 writer.writeheader()
 
+broker = 'broker.emqx.io'
+port = 1883
+topic = "audio_test"
+client_id = "python-mqtt-tcp-sub-{id}".format(id=random.randint(0, 1000))
+username = 'emqx'
+password = 'public'
+
+def connect_mqtt():
+    def on_connect(client, userdata, flags, rc):
+        if rc == 0:
+            print("Connected to MQTT Broker!")
+        else:
+            print("Failed to connect, return code %d\n", rc)
+    # Set Connecting Client ID
+    client = mqtt.Client(client_id)
+    client.username_pw_set(username, password)
+    client.on_connect = on_connect
+    client.connect(broker, port)
+    client.loop_start()
+    return client
+
+def publish_prediction(client, time_stamp, category_name, score):
+    msg = json.dumps({'Timestamp': time_stamp, 'Classification': category_name, 'Accuracy': score})
+    result = client.publish(topic, msg)
+    if result[0] == 0:
+        print("Successfully published message: {}".format(msg))
+    else:
+        print("Failed to publish message: {}".format(msg))
+
+# Initialize the MQTT client
+client = connect_mqtt()
 
 def run(model: str, max_results: int, score_threshold: float,
         overlapping_factor: float, num_threads: int,
@@ -373,6 +413,7 @@ def run(model: str, max_results: int, score_threshold: float,
             time_stamp = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
             writer.writerow({'Timestamp': time_stamp, 'Classification': category.category_name, 'Accuracy': score})
             log_file.flush()
+            publish_prediction(client, time_stamp, category.category_name, score)
         time_interval = slider.get()
         time.sleep(time_interval)
         ui_val(result)
