@@ -49,7 +49,8 @@ def on_message(client, userdata, msg):
     message = msg.payload.decode()
     data_json = json.loads(message)
     global df
-    df = df.append(data_json, ignore_index=True)
+    new_row = {"Timestamp": data_json["Timestamp"], "Classification": data_json["Classification"], "Accuracy": data_json["Accuracy"]}
+    df = df.append(new_row, ignore_index=True)
     print("Data: ", df)
     print("Classification: ", data_json["Classification"])
 
