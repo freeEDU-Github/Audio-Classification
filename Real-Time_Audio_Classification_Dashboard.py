@@ -48,10 +48,12 @@ def on_message(client, userdata, msg):
     topic = msg.topic
     message = msg.payload.decode()
     data_json = json.loads(message)
+
     global df
-    df = df.append(data_json, ignore_index=True)
+    df = pd.concat([df, pd.DataFrame(data_json, index=[0])], ignore_index=True)
     print("Data: ", df)
     print("Classification: ", data_json["Classification"])
+
 
 state = df
 
