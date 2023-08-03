@@ -80,7 +80,7 @@ def update_plot():
             print('Error: No text found to generate wordcloud')
             return
 
-        wordcloud = WordCloud(width=800, height=200, background_color='white').generate(classification_text)
+        wordcloud = WordCloud(width=800, height=200, background_color=None).generate(classification_text)
         plt.figure(figsize=(8, 8), facecolor=None)
         plt.imshow(wordcloud)
         plt.axis("off")
