@@ -6,6 +6,8 @@ import streamlit as st
 import paho.mqtt.client as mqtt
 import pandas as pd
 import json
+import matplotlib
+matplotlib.use('Agg')
 
 from matplotlib import pyplot as plt
 from wordcloud import WordCloud
