@@ -85,11 +85,8 @@ def update_plot():
             return
 
         wordcloud = WordCloud(width=800, height=200, background_color='white').generate(classification_text)
-        plt.figure(figsize=(8, 8), facecolor=None)
-        plt.imshow(wordcloud)
-        plt.axis("off")
-        plt.tight_layout(pad=0)
-        wordcloud_image.pyplot()
+        # Use wordcloud_image.image() to display the WordCloud
+        wordcloud_image.image(wordcloud.to_array(), use_column_width=True)
 
     with st.spinner("Generating heatmap..."):
         fig = go.Figure(
