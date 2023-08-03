@@ -1,6 +1,6 @@
 plotly
 pandas==1.5.2
-streamlit==1.17.0
+streamlit
 matplotlib
 wordcloud
 paho-mqtt
