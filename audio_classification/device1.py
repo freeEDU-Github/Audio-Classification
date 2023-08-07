@@ -30,7 +30,7 @@ def logs():
     root.title("Audio Classification Heatmap")
 
     # read classification_log.csv file
-    df = pd.read_csv("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classification_log.csv")
+    df = pd.read_csv("/home/orin2/Desktop/Audio Classification/Audio-Classification/classification_log.csv")
 
     # create a tab control
     tab_control = ttk.Notebook(root)
@@ -54,7 +54,7 @@ def wordcloud_tab():
     root.title("Audio Classification Wordcloud")
 
     # read classification_log.csv file
-    df = pd.read_csv("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classification_log.csv")
+    df = pd.read_csv("/home/orin2/Desktop/Audio Classification/Audio-Classification/classification_log.csv")
 
     # create a tab control
     tab_control = ttk.Notebook(root)
@@ -137,35 +137,35 @@ def graphic_ui(result):
 
         # Safe
         if label_list[0] == 'Silence':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/silence.jpg")
+            image1 = Image.open("/home/orin2/Desktop/Audio Classification/Audio-Classification/silence.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Typing':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/keyboard_typing.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/keyboard_typing.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Printer':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Printer.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Printer.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Computer keyboard':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Computer keyboard.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Computer keyboard.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Snoring':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Snoring.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Snoring.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
@@ -174,35 +174,35 @@ def graphic_ui(result):
         # Risky
         elif label_list[0] == 'Bus':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Bus.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Bus.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Truck':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Truck.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Truck.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Train':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Train.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Train.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Inside, public space':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Inside, public space.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Inside, public space.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Applause':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Applause.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Applause.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
@@ -211,35 +211,35 @@ def graphic_ui(result):
         # Danger
         elif label_list[0] == 'Police car (siren)':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Police car (siren).jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Police car (siren).jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Civil defense siren' or label_list[0] == 'Siren':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Civil defense siren.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Civil defense siren.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Smoke alarm':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Smoke alarm.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Smoke alarm.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Screaming':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Screaming.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Screaming.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Shout':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Shout.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Shout.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
@@ -247,65 +247,65 @@ def graphic_ui(result):
 
 
         elif label_list[0] == 'Speech':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/talking.jpg")
+            image1 = Image.open("/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/talking.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Animal':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/dog.jpg")
+            image1 = Image.open("/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/dog.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Synthesizer' or label_list[0] == 'Music' or label_list[0] == 'Keyboard (musical)':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/synth")
+            image1 = Image.open("/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/synth")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Car Alarm':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/car_alarm.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/car_alarm.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'DoorBell':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/doorbelljpg")
+            image1 = Image.open("/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/doorbelljpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Guitar':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/guitar.jpg")
+            image1 = Image.open("/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/guitar.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Conversation':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Conversation.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Conversation.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Alarm clock':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Alarm clock.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Alarm clock.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Radio':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Radio.jpg")
+            image1 = Image.open("/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Radio.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Christmas music':
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Christmas music.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/Christmas music.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
@@ -313,7 +313,7 @@ def graphic_ui(result):
 
         else:
             image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/none.jpg")
+                "/home/orin2/Desktop/Audio Classification/Audio-Classification/classes/none.jpg")
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
