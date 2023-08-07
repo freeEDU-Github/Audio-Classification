@@ -1,4 +1,7 @@
 import argparse
+import json
+import os
+import random
 import time
 
 from tflite_support.task import audio
@@ -22,12 +25,13 @@ root.geometry("600x660")
 
 min_prediction = 50
 
+
 def logs():
     root = tk.Tk()
     root.title("Audio Classification Heatmap")
 
     # read classification_log.csv file
-    df = pd.read_csv("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classification_log.csv")
+    df = pd.read_csv("/home/orin2/Desktop/Audio Classification/Audio-Classification/classification_log.csv")
 
     # create a tab control
     tab_control = ttk.Notebook(root)
@@ -51,7 +55,7 @@ def wordcloud_tab():
     root.title("Audio Classification Wordcloud")
 
     # read classification_log.csv file
-    df = pd.read_csv("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classification_log.csv")
+    df = pd.read_csv("/home/orin2/Desktop/Audio Classification/Audio-Classification/classification_log.csv")
 
     # create a tab control
     tab_control = ttk.Notebook(root)
@@ -75,10 +79,10 @@ def wordcloud_tab():
 rectangle = tkinter.Canvas(root, width=600, height=50)
 rectangle.place(x=0, y=0)
 
-button = tkinter.Button(root, borderwidth=3, width=62, height=1, text="Heatmap", command=lambda: logs())
+button = tkinter.Button(root, borderwidth=3, width=70, height=1, text="Heatmap", command=lambda: logs())
 button.place(relx=0.5, rely=0.92, anchor='s')
 
-button = tkinter.Button(root, borderwidth=3, width=62, height=1, text="Word Cloud", command=lambda: wordcloud_tab())
+button = tkinter.Button(root, borderwidth=3, width=70, height=1, text="Word Cloud", command=lambda: wordcloud_tab())
 button.place(relx=0.5, rely=0.98, anchor='s')
 
 slider = tkinter.Scale(root, from_=1, to=60, orient='horizontal', resolution=1, length=590, tickinterval=10)
@@ -104,7 +108,7 @@ min_prediction_scale.set(50)
 def graphic_ui(result):
     label1 = tkinter.Label(root)
     label1.place(x=5, y=50)
-    Label2 = tkinter.Label(root, bg="#6400FF", bd=91, height=8, width=12)
+    Label2 = tkinter.Label(root, bg="#6400FF", bd=91, height=8, width=13)
     Label2.place(x=300, y=50)
     label3 = tkinter.Label(root, bg="#6400FF", fg='white', font="Castellar, 50")
     label3.place(relx=0.75, rely=0.38, anchor='center')
@@ -116,194 +120,219 @@ def graphic_ui(result):
         label_list = [category.category_name for category in classification.categories]
         score_list = [category.score for category in classification.categories]
         percentage = "{:.0%}".format(score_list[0])
-        
-        if label_list[0] == 'Police car (siren)' or label_list[0] == 'Civil defense siren' or label_list[0] == 'Smoke alarm' or label_list[0] == 'Screaming' or label_list[0] == 'Shout' or label_list[0] == 'Siren':
+
+        if label_list[0] == 'Police car (siren)' or label_list[0] == 'Civil defense siren' or label_list[
+            0] == 'Smoke alarm' or label_list[0] == 'Screaming' or label_list[0] == 'Shout' or label_list[0] == 'Siren':
             rectangle.create_rectangle(0, 0, 600, 50, fill="red")
             rectangle.create_text(300, 25, text="Danger", font=("Castellar", 20), fill="white")
-        elif label_list[0] == 'Bus' or label_list[0] == 'Truck' or label_list[0] == 'Train' or label_list[0] == 'Inside, public space' or label_list[0] == 'Applause':
+        elif label_list[0] == 'Bus' or label_list[0] == 'Truck' or label_list[0] == 'Train' or label_list[
+            0] == 'Inside, public space' or label_list[0] == 'Applause':
             rectangle.create_rectangle(0, 0, 600, 50, fill="yellow")
             rectangle.create_text(300, 25, text="Risky", font=("Castellar", 20), fill="white")
-        elif label_list[0] == 'Silence' or label_list[0] == 'Typing' or label_list[0] == 'Printer' or label_list[0] == 'Computer keyboard' or label_list[0] == 'Snoring':
+        elif label_list[0] == 'Silence' or label_list[0] == 'Typing' or label_list[0] == 'Printer' or label_list[
+            0] == 'Computer keyboard' or label_list[0] == 'Snoring':
             rectangle.create_rectangle(0, 0, 600, 50, fill="green")
             rectangle.create_text(300, 25, text="Safe", font=("Castellar", 20), fill="white")
         else:
             rectangle.create_rectangle(0, 0, 600, 50, fill="white")
 
-        #Safe
+        # Get the current working directory
+        cwd = os.getcwd()
+
+        # Define the directory where your images are stored relative to the current directory
+        image_directory = "classes"
+
+        # Construct the file path for the images
+        silence_image_path = os.path.join(cwd, image_directory, "silence.jpg")
+        typing_image_path = os.path.join(cwd, image_directory, "keyboard_typing.jpg")
+        printer_image_path = os.path.join(cwd, image_directory, "Printer.jpg")
+        computer_image_path = os.path.join(cwd, image_directory, "Computer keyboard.jpg")
+        snoring_image_path = os.path.join(cwd, image_directory, "Snoring.jpg")
+
+        bus_image_path = os.path.join(cwd, image_directory, "Bus.jpg")
+        truck_image_path = os.path.join(cwd, image_directory, "Truck.jpg")
+        train_image_path = os.path.join(cwd, image_directory, "Train.jpg")
+        inside_image_path = os.path.join(cwd, image_directory, "Inside, public space.jpg")
+        applause_image_path = os.path.join(cwd, image_directory, "Applause.jpg")
+
+        police_image_path = os.path.join(cwd, image_directory, "Police car (siren).jpg")
+        civil_image_path = os.path.join(cwd, image_directory, "Civil defense siren.jpg")
+        smoke_image_path = os.path.join(cwd, image_directory, "Smoke alarm.jpg")
+        screaming_image_path = os.path.join(cwd, image_directory, "Screaming.jpg")
+        shout_image_path = os.path.join(cwd, image_directory, "Shout.jpg")
+
+        talking_image_path = os.path.join(cwd, image_directory, "talking.jpg")
+        dog_image_path = os.path.join(cwd, image_directory, "dog.jpg")
+        synth_image_path = os.path.join(cwd, image_directory, "synth")
+        car_image_path = os.path.join(cwd, image_directory, "car_alarm.jpg")
+        doorbell_image_path = os.path.join(cwd, image_directory, "doorbell.jpg")
+        guitar_path = os.path.join(cwd, image_directory, "guitar.jpg")
+        conversation_image_path = os.path.join(cwd, image_directory, "Conversation.jpg")
+        alarm_image_path = os.path.join(cwd, image_directory, "Alarm clock.jpg")
+        radio_image_path = os.path.join(cwd, image_directory, "Radio.jpg")
+        christmas_image_path = os.path.join(cwd, image_directory, "Christmas music.jpg")
+
+        none_image_path = os.path.join(cwd, image_directory, "none.jpg")
+
+        # Safe
         if label_list[0] == 'Silence':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/silence.jpg")
+            image1 = Image.open(silence_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Typing':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/keyboard_typing.jpg")
+            image1 = Image.open(typing_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Printer':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Printer.jpg")
+            image1 = Image.open(printer_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Computer keyboard':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Computer keyboard.jpg")
+            image1 = Image.open(computer_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Snoring':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Snoring.jpg")
+            image1 = Image.open(snoring_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
 
-        #Risky
+        # Risky
         elif label_list[0] == 'Bus':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Bus.jpg")
+            image1 = Image.open(bus_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Truck':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Truck.jpg")
+            image1 = Image.open(truck_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Train':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Train.jpg")
+            image1 = Image.open(train_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Inside, public space':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Inside, public space.jpg")
+            image1 = Image.open(inside_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Applause':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Applause.jpg")
+            image1 = Image.open(applause_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
 
-        #Danger
+        # Danger
         elif label_list[0] == 'Police car (siren)':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Police car (siren).jpg")
+            image1 = Image.open(police_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Civil defense siren' or label_list[0] == 'Siren':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Civil defense siren.jpg")
+            image1 = Image.open(civil_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Smoke alarm':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Smoke alarm.jpg")
+            image1 = Image.open(smoke_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Screaming':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Screaming.jpg")
+            image1 = Image.open(screaming_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Shout':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Shout.jpg")
+            image1 = Image.open(shout_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
 
-
         elif label_list[0] == 'Speech':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/talking.jpg")
+            image1 = Image.open(talking_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Animal':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/dog.jpg")
+            image1 = Image.open(dog_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Synthesizer' or label_list[0] == 'Music' or label_list[0] == 'Keyboard (musical)':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/synth")
+            image1 = Image.open(synth_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Car Alarm':
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/car_alarm.jpg")
+            image1 = Image.open(car_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'DoorBell':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/doorbelljpg")
+            image1 = Image.open(doorbell_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Guitar':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/guitar.jpg")
+            image1 = Image.open(guitar_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Conversation':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Conversation.jpg")
+            image1 = Image.open(conversation_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Alarm clock':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Alarm clock.jpg")
+            image1 = Image.open(alarm_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Radio':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Radio.jpg")
+            image1 = Image.open(radio_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
         elif label_list[0] == 'Christmas music':
-            image1 = Image.open("/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/Christmas music.jpg")
+            image1 = Image.open(christmas_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
             label1.image = test
-        
+
         else:
-            image1 = Image.open(
-                "/home/pi/examples/lite/examples/audio_classification/raspberry_pi/classes/none.jpg")
+            image1 = Image.open(none_image_path)
             img = image1.resize((295, 320))
             test = ImageTk.PhotoImage(img)
             label1.configure(image=test)
@@ -316,13 +345,44 @@ def graphic_ui(result):
     root.after(1000, update_ui)
     root.update()
 
-
 # Open the CSV file for writing
 log_file = open("classification_log.csv", "w", newline='')
 fieldnames = ['Timestamp', 'Classification', 'Accuracy']
 writer = csv.DictWriter(log_file, fieldnames=fieldnames)
 writer.writeheader()
 
+broker = 'broker.emqx.io'
+port = 1883
+main_topic = "audio_test"
+sub_topic = "device1"
+client_id = "python-mqtt-tcp-sub-{id}".format(id=random.randint(0, 1000))
+username = 'emqx'
+password = 'public'
+
+def connect_mqtt():
+    def on_connect(client, userdata, flags, rc):
+        if rc == 0:
+            print("Connected to MQTT Broker!")
+        else:
+            print("Failed to connect, return code %d\n", rc)
+    # Set Connecting Client ID
+    client = mqtt.Client(client_id)
+    client.username_pw_set(username, password)
+    client.on_connect = on_connect
+    client.connect(broker, port)
+    client.loop_start()
+    return client
+
+def publish_prediction(client, time_stamp, category_name, score, topic):
+    msg = json.dumps({'Timestamp': time_stamp, 'Classification': category_name, 'Accuracy': score})
+    result = client.publish(topic, msg)
+    if result[0] == 0:
+        print("Successfully published message: {}".format(msg))
+    else:
+        print("Failed to publish message: {}".format(msg))
+
+# Initialize the MQTT client
+client = connect_mqtt()
 
 def run(model: str, max_results: int, score_threshold: float,
         overlapping_factor: float, num_threads: int,
@@ -373,6 +433,8 @@ def run(model: str, max_results: int, score_threshold: float,
             time_stamp = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
             writer.writerow({'Timestamp': time_stamp, 'Classification': category.category_name, 'Accuracy': score})
             log_file.flush()
+            publish_prediction(client, time_stamp, category.category_name, score, main_topic)
+            publish_prediction(client, time_stamp, category.category_name, score, sub_topic)
         time_interval = slider.get()
         time.sleep(time_interval)
         ui_val(result)
